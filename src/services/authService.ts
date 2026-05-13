@@ -43,7 +43,7 @@ function commonHeaders(deviceId: string): Record<string, string> {
   return {
     'Content-Type': 'application/x-www-form-urlencoded',
     Accept: 'application/json',
-    'X-Msh-Platform': 'kimi-status-pro-vscode',
+    'X-Msh-Platform': 'claude-status-pro-vscode',
     'X-Msh-Version': '0.4.0',
     'X-Msh-Device-Id': deviceId,
   };
@@ -209,14 +209,14 @@ export class AuthService {
     try {
       deviceCodeResp = await requestDeviceCode(deviceId);
     } catch (err) {
-      void vscode.window.showErrorMessage(`Kimi sign-in failed: ${(err as Error).message}`);
+      void vscode.window.showErrorMessage(`Claude sign-in failed: ${(err as Error).message}`);
       return false;
     }
 
     const uri = deviceCodeResp.verification_uri_complete ?? deviceCodeResp.verification_uri;
     void vscode.env.openExternal(vscode.Uri.parse(uri));
     void vscode.window.showInformationMessage(
-      `Kimi sign-in: enter code "${deviceCodeResp.user_code}" in the browser if not automatically redirected.`
+      `Claude sign-in: enter code "${deviceCodeResp.user_code}" in the browser if not automatically redirected.`
     );
 
     const expiresAt = Date.now() + (deviceCodeResp.expires_in * 1000);
@@ -228,17 +228,17 @@ export class AuthService {
       if (outcome.kind === 'success') {
         await writeOAuth(this.secrets, outcome.creds);
         this.invalidate();
-        void vscode.window.showInformationMessage('Kimi sign-in successful.');
+        void vscode.window.showInformationMessage('Claude sign-in successful.');
         return true;
       }
       if (outcome.kind === 'failed') {
-        void vscode.window.showErrorMessage(`Kimi sign-in failed: ${outcome.error}`);
+        void vscode.window.showErrorMessage(`Claude sign-in failed: ${outcome.error}`);
         return false;
       }
       // pending: continue polling
     }
 
-    void vscode.window.showWarningMessage('Kimi sign-in timed out. Please try again.');
+    void vscode.window.showWarningMessage('Claude sign-in timed out. Please try again.');
     return false;
   }
 

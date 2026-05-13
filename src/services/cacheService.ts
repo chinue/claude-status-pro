@@ -8,8 +8,8 @@ import * as os from 'os';
 import { CachedData } from '../types';
 
 const CACHE_DIR = path.join(os.homedir(), '.kimi');
-const CACHE_FILE = path.join(CACHE_DIR, 'kimi-status-pro-cache-v2.json');
-const SCHEMA = 'kimi-status-pro-cache-v2';
+const CACHE_FILE = path.join(CACHE_DIR, 'claude-status-pro-cache-v2.json');
+const SCHEMA = 'claude-status-pro-cache-v2';
 const CURRENT_VERSION = 2;
 
 export class CacheService {

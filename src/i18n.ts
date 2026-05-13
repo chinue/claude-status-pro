@@ -4,8 +4,8 @@ export type Locale = 'en' | 'zh-CN';
 
 export const dict: Record<Locale, Record<string, string>> = {
   en: {
-    'tooltip.title': 'Kimi Code Usage',
-    'tooltip.notLoggedIn': 'Sign in to see your usage data.\nRun "KimiStatusPro: Sign In" or set an API key.',
+    'tooltip.title': 'Claude Code Usage',
+    'tooltip.notLoggedIn': 'Sign in to see your usage data.\nRun "ClaudeStatusPro: Sign In" or set an API key.',
     'tooltip.authFailed': 'Authentication failed. Please sign in again.',
     'tooltip.window5h': '5h window',
     'tooltip.window7d': '7d window',
@@ -32,7 +32,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tooltip.table.col.parallel': 'Parallel',
     'tooltip.resumeAutoRefresh': 'Resume auto-refresh',
     'tooltip.pauseAutoRefresh': 'Pause auto-refresh',
-    'dashboard.title': 'Kimi Code Usage',
+    'dashboard.title': 'Claude Code Usage',
     'dashboard.loading': 'Loading…',
     'dashboard.window5h': '5h window',
     'dashboard.window7d': '7d window',
@@ -100,8 +100,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'dashboard.msgs': 'msgs',
   },
   'zh-CN': {
-    'tooltip.title': 'Kimi Code \u7528\u91cf',
-    'tooltip.notLoggedIn': '\u8bf7\u767b\u5f55\u540e\u67e5\u770b\u7528\u91cf\u6570\u636e\u3002\n\u8fd0\u884c "KimiStatusPro: Sign In" \u6216\u8bbe\u7f6e API Key\u3002',
+    'tooltip.title': 'Claude Code \u7528\u91cf',
+    'tooltip.notLoggedIn': '\u8bf7\u767b\u5f55\u540e\u67e5\u770b\u7528\u91cf\u6570\u636e\u3002\n\u8fd0\u884c "ClaudeStatusPro: Sign In" \u6216\u8bbe\u7f6e API Key\u3002',
     'tooltip.authFailed': '\u8ba4\u8bc1\u5931\u8d25\uff0c\u8bf7\u91cd\u65b0\u767b\u5f55\u3002',
     'tooltip.window5h': '5h \u7a97\u53e3',
     'tooltip.window7d': '7d \u7a97\u53e3',
@@ -128,7 +128,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tooltip.table.col.parallel': '\u5e76\u884c\u4e0a\u9650',
     'tooltip.resumeAutoRefresh': '\u6062\u590d\u81ea\u52a8\u5237\u65b0',
     'tooltip.pauseAutoRefresh': '\u6682\u505c\u81ea\u52a8\u5237\u65b0',
-    'dashboard.title': 'Kimi Code \u7528\u91cf',
+    'dashboard.title': 'Claude Code \u7528\u91cf',
     'dashboard.loading': '\u52a0\u8f7d\u4e2d…',
     'dashboard.window5h': '5h \u7a97\u53e3',
     'dashboard.window7d': '7d \u7a97\u53e3',

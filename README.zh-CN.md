@@ -1,19 +1,19 @@
-# KimiStatusPro
+# ClaudeStatusPro
 
-> 一款专业的 VS Code 扩展，用于实时监控 **Kimi Code** 配额使用情况，采用全新架构从零重建。
+> 一款专业的 VS Code 扩展，用于实时监控 **Claude Code** 配额使用情况，采用全新架构从零重建。
 
-[![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/yourname/kimi-status-pro)
+[![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/yourname/claude-status-pro)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 [English](README.md) | **中文**
 
 ---
 
-## KimiStatusPro 是什么？
+## ClaudeStatusPro 是什么？
 
-**KimiStatusPro** 是一款 VS Code 扩展，直接在状态栏显示你的 **Kimi Code** 用量配额——配有精美的仪表盘、本地文件估算功能，以及零不必要的磁盘 I/O。
+**ClaudeStatusPro** 是一款 VS Code 扩展，直接在状态栏显示你的 **Claude Code** 用量配额——配有精美的仪表盘、本地文件估算功能，以及零不必要的磁盘 I/O。
 
-与原版 `kimi-status-ex`（v0.3.x）相比，后者因架构腐烂而饱受困扰（双定时器、竞态条件、同步文件读取），**KimiStatusPro** 是完全重建的版本，具备以下特点：
+与原版 `kimi-status-ex`（v0.3.x）相比，后者因架构腐烂而饱受困扰（双定时器、竞态条件、同步文件读取），**ClaudeStatusPro** 是完全重建的版本，具备以下特点：
 
 - **单一状态源** —— 轻量级 Store + reducer 模式
 - **单一调度器** —— 一条 `setTimeout` 链，无重叠 API 调用
@@ -49,7 +49,7 @@
 
 ### 架构亮点
 
-| 特性 | v0.3.x | KimiStatusPro |
+| 特性 | v0.3.x | ClaudeStatusPro |
 |---|---|---|
 | 状态管理 | `DataManager` 直接修改 | `Store` + `dispatch(action)` |
 | 调度器 | 双 `setInterval` + 锁 | 单一 `setTimeout` 链 |
@@ -63,13 +63,13 @@
 
 ### 从 VS Code 应用商店
 
-在扩展面板中搜索 **"KimiStatusPro"** 并安装。
+在扩展面板中搜索 **"ClaudeStatusPro"** 并安装。
 
 ### 从源码
 
 ```bash
-git clone https://github.com/yourname/kimi-status-pro.git
-cd kimi-status-pro
+git clone https://github.com/yourname/claude-status-pro.git
+cd claude-status-pro
 npm install
 npm run build
 # 在 VS Code 中按 F5 启动扩展宿主
@@ -79,9 +79,9 @@ npm run build
 
 ## 认证方式
 
-KimiStatusPro 支持三种认证方式（按顺序自动检测）：
+ClaudeStatusPro 支持三种认证方式（按顺序自动检测）：
 
-1. **API Key** —— 通过命令 `KimiStatusPro: Set API Key` 设置
+1. **API Key** —— 通过命令 `ClaudeStatusPro: Set API Key` 设置
 2. **OAuth** —— Token 过期前自动刷新
 3. **CLI 凭证** —— 回退到 `~/.kimi/credentials.json`
 
@@ -91,11 +91,11 @@ KimiStatusPro 支持三种认证方式（按顺序自动检测）：
 
 | 设置项 | 默认值 | 说明 |
 |---|---|---|
-| `kimiStatusPro.language` | `auto` | 显示语言 (`auto` / `en` / `zh-CN`) |
-| `kimiStatusPro.refreshIntervalSeconds` | `60` | API 刷新间隔（最小 30s） |
-| `kimiStatusPro.displayMode` | `percent` | 状态栏模式 (`percent` / `absolute`) |
-| `kimiStatusPro.statusBar.alignment` | `right` | 状态栏位置 (`left` / `right`) |
-| `kimiStatusPro.rateLimitApi.enabled` | `true` | 启用自动 API 轮询 |
+| `claudeStatusPro.language` | `auto` | 显示语言 (`auto` / `en` / `zh-CN`) |
+| `claudeStatusPro.refreshIntervalSeconds` | `60` | API 刷新间隔（最小 30s） |
+| `claudeStatusPro.displayMode` | `percent` | 状态栏模式 (`percent` / `absolute`) |
+| `claudeStatusPro.statusBar.alignment` | `right` | 状态栏位置 (`left` / `right`) |
+| `claudeStatusPro.rateLimitApi.enabled` | `true` | 启用自动 API 轮询 |
 
 ---
 
@@ -103,11 +103,11 @@ KimiStatusPro 支持三种认证方式（按顺序自动检测）：
 
 | 命令 | ID | 说明 |
 |---|---|---|
-| Refresh | `kimiStatusPro.refresh` | 立即强制刷新 API |
-| Sign In | `kimiStatusPro.signIn` | 设置 API Key 或发起 OAuth |
-| Sign Out | `kimiStatusPro.signOut` | 清除所有凭证 |
-| Show Dashboard | `kimiStatusPro.showDashboard` | 打开用量仪表盘 |
-| Toggle Pause | `kimiStatusPro.togglePause` | 暂停/恢复自动刷新（跨窗口同步） |
+| Refresh | `claudeStatusPro.refresh` | 立即强制刷新 API |
+| Sign In | `claudeStatusPro.signIn` | 设置 API Key 或发起 OAuth |
+| Sign Out | `claudeStatusPro.signOut` | 清除所有凭证 |
+| Show Dashboard | `claudeStatusPro.showDashboard` | 打开用量仪表盘 |
+| Toggle Pause | `claudeStatusPro.togglePause` | 暂停/恢复自动刷新（跨窗口同步） |
 
 ---
 

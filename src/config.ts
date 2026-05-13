@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import { DisplayMode, LanguageSetting, TokenPricing } from './types';
 
-const CFG_SECTION = 'kimiStatusPro';
+const CFG_SECTION = 'claudeStatusPro';
 
 export class ConfigService {
   private static instance: ConfigService;

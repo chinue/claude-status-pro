@@ -1,4 +1,4 @@
-# KimiStatusPro Agent Instructions
+# ClaudeStatusPro Agent Instructions
 
 ## 最高优先级规则（不可遗忘）
 

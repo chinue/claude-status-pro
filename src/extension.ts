@@ -12,10 +12,10 @@ import { StatusBarPresenter } from './presenters/statusBar';
 import { DashboardPanel } from './presenters/dashboard';
 import { log, writeApiKey, deleteApiKey, deleteOAuth } from './utils';
 
-const PAUSE_STATE_KEY = 'kimiStatusPro._pauseSignal';
+const PAUSE_STATE_KEY = 'claudeStatusPro._pauseSignal';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  log('KimiStatusPro v2 activated');
+  log('ClaudeStatusPro v2 activated');
 
   const store = new Store();
   const config = ConfigService.getInstance();
@@ -61,34 +61,34 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // 5. Register commands
   context.subscriptions.push(
-    vscode.commands.registerCommand('kimiStatusPro.refresh', () => {
+    vscode.commands.registerCommand('claudeStatusPro.refresh', () => {
       scheduler.force();
     }),
-    vscode.commands.registerCommand('kimiStatusPro.signIn', async () => {
+    vscode.commands.registerCommand('claudeStatusPro.signIn', async () => {
       const success = await authService.startOAuthFlow();
       if (success) {
         scheduler.force();
       }
     }),
-    vscode.commands.registerCommand('kimiStatusPro.signOut', async () => {
+    vscode.commands.registerCommand('claudeStatusPro.signOut', async () => {
       await deleteApiKey(context.secrets);
       await deleteOAuth(context.secrets);
       authService.invalidate();
       localUsageService.invalidate();
       store.dispatch({ type: 'SIGN_OUT' });
     }),
-    vscode.commands.registerCommand('kimiStatusPro.setApiKey', () => {
+    vscode.commands.registerCommand('claudeStatusPro.setApiKey', () => {
       promptForApiKey(context);
     }),
-    vscode.commands.registerCommand('kimiStatusPro.showDashboard', () => {
+    vscode.commands.registerCommand('claudeStatusPro.showDashboard', () => {
       DashboardPanel.createOrShow(store);
     }),
-    vscode.commands.registerCommand('kimiStatusPro.togglePause', async () => {
+    vscode.commands.registerCommand('claudeStatusPro.togglePause', async () => {
       const next = !store.getState().ui.isPaused;
       store.dispatch({ type: 'UI_SET_PAUSED', payload: next });
       await context.globalState.update(PAUSE_STATE_KEY, next);
       // Broadcast via configuration change so other windows pick it up
-      const cfg = vscode.workspace.getConfiguration('kimiStatusPro');
+      const cfg = vscode.workspace.getConfiguration('claudeStatusPro');
       await cfg.update('_pauseSignal', Date.now(), true);
     }),
   );
@@ -96,11 +96,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // 6. Listen to configuration changes (including pause broadcast)
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration('kimiStatusPro')) {
+      if (e.affectsConfiguration('claudeStatusPro')) {
         store.dispatch({ type: 'UI_SET_DISPLAY_MODE', payload: config.displayMode });
         store.dispatch({ type: 'UI_SET_LANGUAGE', payload: config.language });
         // Sync pause state from other windows via _pauseSignal broadcast
-        if (e.affectsConfiguration('kimiStatusPro._pauseSignal')) {
+        if (e.affectsConfiguration('claudeStatusPro._pauseSignal')) {
           const pausedFromGlobal = context.globalState.get<boolean>(PAUSE_STATE_KEY, false);
           const currentPaused = store.getState().ui.isPaused;
           if (pausedFromGlobal !== currentPaused) {
@@ -118,12 +118,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 export function deactivate(): void {
-  log('KimiStatusPro v2 deactivated');
+  log('ClaudeStatusPro v2 deactivated');
 }
 
 async function promptForApiKey(context: vscode.ExtensionContext): Promise<void> {
   const value = await vscode.window.showInputBox({
-    title: 'KimiStatusPro – Set API Key',
+    title: 'ClaudeStatusPro – Set API Key',
     prompt: 'Paste your Kimi API key (sk-...).',
     password: true,
     ignoreFocusOut: true,

@@ -1,4 +1,4 @@
-# KimiStatusPro v2 本地估算设计文档
+# ClaudeStatusPro v2 本地估算设计文档
 
 > 版本：v2.0.0-draft  
 > 日期：2026-05-10  
@@ -526,7 +526,7 @@ async function onLongTick(store: Store, authService: AuthService): Promise<void>
 ```json
 {
   "version": 2,
-  "schema": "kimi-status-pro-cache-v2",
+  "schema": "claude-status-pro-cache-v2",
   "writtenAt": "2026-05-10T21:00:00.000Z",
   "data": {
     "quota": {

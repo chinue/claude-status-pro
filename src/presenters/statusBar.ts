@@ -37,19 +37,19 @@ export class StatusBarPresenter {
     const alignment = this.config.statusBarAlignment;
 
     this.itemWeekly = vscode.window.createStatusBarItem(alignment, 104);
-    this.itemWeekly.name = 'KimiStatusPro Weekly';
-    this.itemWeekly.command = 'kimiStatusPro.showDashboard';
+    this.itemWeekly.name = 'ClaudeStatusPro Weekly';
+    this.itemWeekly.command = 'claudeStatusPro.showDashboard';
     this.itemWeekly.text = '$(sync~spin) Kimi…';
     this.itemWeekly.show();
 
     this.itemWindow = vscode.window.createStatusBarItem(alignment, 103);
-    this.itemWindow.name = 'KimiStatusPro Window';
-    this.itemWindow.command = 'kimiStatusPro.refresh';
+    this.itemWindow.name = 'ClaudeStatusPro Window';
+    this.itemWindow.command = 'claudeStatusPro.refresh';
     this.itemWindow.show();
 
     this.itemPause = vscode.window.createStatusBarItem(alignment, 102);
-    this.itemPause.name = 'KimiStatusPro Pause';
-    this.itemPause.command = 'kimiStatusPro.togglePause';
+    this.itemPause.name = 'ClaudeStatusPro Pause';
+    this.itemPause.command = 'claudeStatusPro.togglePause';
     this.itemPause.text = '\u23F8\uFE0F';
     this.itemPause.show();
 
@@ -79,7 +79,7 @@ export class StatusBarPresenter {
       if (state.authStatus === 'missing') {
         this.stopUpdateAnimation();
         this.itemWeekly.text = '$(key) Kimi: sign in';
-        this.itemWeekly.command = 'kimiStatusPro.signIn';
+        this.itemWeekly.command = 'claudeStatusPro.signIn';
         this.itemWeekly.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         this.itemWeekly.color = new vscode.ThemeColor('statusBarItem.errorForeground');
         this.itemWindow.hide();
@@ -89,7 +89,7 @@ export class StatusBarPresenter {
       if (state.error && state.authStatus === 'failed') {
         this.stopUpdateAnimation();
         this.itemWeekly.text = '$(warning) Kimi: auth failed';
-        this.itemWeekly.command = 'kimiStatusPro.signIn';
+        this.itemWeekly.command = 'claudeStatusPro.signIn';
         this.itemWeekly.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         this.itemWindow.hide();
         return;
@@ -163,7 +163,7 @@ export class StatusBarPresenter {
         this.itemWeekly.text = `\uD83C\uDF18 Kimi:${formatPercent(weeklyPct, 1)}${estimateIndicator}${errorIndicator}`;
       }
 
-      this.itemWeekly.command = 'kimiStatusPro.showDashboard';
+      this.itemWeekly.command = 'claudeStatusPro.showDashboard';
       this.itemWeekly.color = this.utilizationToColor(weeklyUtil);
       this.itemWeekly.backgroundColor = undefined;
       this.itemWeekly.show();

@@ -40,7 +40,7 @@ describe('Scheduler', () => {
   it('tick dispatches LOADING_START -> API_SUCCESS -> LOADING_END', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     const quota = {
       weeklyLimit: 1000, weeklyUsed: 250, weeklyUsedPct: 25, weeklyResetAt: Date.now() + 86400000,
@@ -90,7 +90,7 @@ describe('Scheduler', () => {
   it('short tick updates local estimate with decimal precision', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     // API returns 62% with 25M tokens used
     const quota = {
@@ -158,7 +158,7 @@ describe('Scheduler', () => {
   it('force() triggers a long tick (API fetch) even when short tick is due', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     const quota = {
       weeklyLimit: 1000, weeklyUsed: 250, weeklyUsedPct: 25, weeklyResetAt: Date.now() + 86400000,
@@ -207,7 +207,7 @@ describe('Scheduler', () => {
   it('short tick dispatches full usage detail in LOCAL_ESTIMATE', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     const quota = {
       weeklyLimit: 100_000_000, weeklyUsed: 62_000_000, weeklyUsedPct: 62, weeklyResetAt: Date.now() + 86400000,
@@ -277,7 +277,7 @@ describe('Scheduler', () => {
   it('long tick preserves smooth estimate when rounded value matches API integer', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     // API returns integer 25, but local estimate is 25.3 (smooth)
     const quota = {
@@ -343,7 +343,7 @@ describe('Scheduler', () => {
   it('long tick forces API integer when rounded estimate differs', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     // API returns integer 25, but local estimate drifted to 25.6 (rounds to 26)
     const quota = {
@@ -409,7 +409,7 @@ describe('Scheduler', () => {
   it('preserves old quota decimal precision when API returns integer and no current estimate', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     // Seed old quota with 12.1% precision (e.g. from a previous API response)
     store.dispatch({
@@ -463,7 +463,7 @@ describe('Scheduler', () => {
   it('smooth estimate preserved through short tick after long tick', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     // API returns integer 25
     const quota = {
@@ -567,7 +567,7 @@ describe('Scheduler', () => {
 
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     const quota = {
       weeklyLimit: 1000, weeklyUsed: 250, weeklyUsedPct: 25, weeklyResetAt: Date.now() + 86400000,
@@ -615,7 +615,7 @@ describe('Scheduler', () => {
   it('short tick skips dispatch when no local entries exist', async () => {
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
 
     const quota = {
       weeklyLimit: 100_000_000, weeklyUsed: 25_000_000, weeklyUsedPct: 25, weeklyResetAt: Date.now() + 86400000,

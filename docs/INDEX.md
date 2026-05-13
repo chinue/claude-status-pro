@@ -1,4 +1,4 @@
-# KimiStatusPro 设计文档索引
+# ClaudeStatusPro 设计文档索引
 
 > **用途**：代码变更后，通过 `grep -r "DESIGN:" src/` 快速定位相关设计文档。
 >

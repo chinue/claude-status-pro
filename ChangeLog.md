@@ -4,7 +4,7 @@
 
 ### Changed
 - **Dashboard Pricing 卡片：官网链接与公布日期可配置**
-  - `package.json` 新增 `kimiStatusPro.pricing.officialUrl`（order 84，default `https://platform.kimi.com/docs/pricing/chat-k26`）和 `kimiStatusPro.pricing.officialDate`（order 85，default `2026-05-13`）
+  - `package.json` 新增 `claudeStatusPro.pricing.officialUrl`（order 84，default `https://platform.kimi.com/docs/pricing/chat-k26`）和 `claudeStatusPro.pricing.officialDate`（order 85，default `2026-05-13`）
   - `ConfigService` 新增 `pricingOfficialUrl` 和 `pricingOfficialDate` getter
   - `DashboardSettings` 类型扩展 `officialUrl` / `officialDate` 字段
   - Dashboard Pricing 卡片中的 Provider badge 和「官方定价」链接均使用用户配置的 URL
@@ -23,10 +23,10 @@
 - **回退交互式 pricing 编辑器，改为 Settings 静态配置 + 官网链接**
   - `git checkout 5eb14cf -- .` 回退到 v0.2.17 代码基线，移除 PricingService、`isPricingEditing`、object 类型 pricing 配置、Dashboard 输入框编辑器及所有焦点控制逻辑
   - `package.json` 新增 4 个静态定价设置项（参照 claude-status）：
-    - `kimiStatusPro.pricing.models.kimi26.inputPerMillion`（order 80，default 6.50）
-    - `kimiStatusPro.pricing.models.kimi26.outputPerMillion`（order 81，default 27.00）
-    - `kimiStatusPro.pricing.models.kimi26.cacheReadPerMillion`（order 82，default 1.10）
-    - `kimiStatusPro.pricing.models.kimi26.cacheCreatePerMillion`（order 83，default 6.50）
+    - `claudeStatusPro.pricing.models.kimi26.inputPerMillion`（order 80，default 6.50）
+    - `claudeStatusPro.pricing.models.kimi26.outputPerMillion`（order 81，default 27.00）
+    - `claudeStatusPro.pricing.models.kimi26.cacheReadPerMillion`（order 82，default 1.10）
+    - `claudeStatusPro.pricing.models.kimi26.cacheCreatePerMillion`（order 83，default 6.50）
   - `ConfigService` 新增 `getPricing(modelName)`：按模型名动态映射到 `pricing.models.<key>` 配置
   - `localUsageService.parseLine()` 使用 `ConfigService.getPricing(modelName)` 替代 hardcoded `DEFAULT_PRICING`
   - Dashboard Pricing & Settings 卡片移除编辑器 UI，改为显示「查看官方定价 →」链接（跳转 https://platform.kimi.com/docs/pricing/chat-k26）
@@ -35,12 +35,12 @@
 
 ### Added
 - **开放 StatusBar hardcoded 配置** (`src/config.ts`, `src/presenters/statusBar.ts`, `package.json`)
-  - `kimiStatusPro.statusBar.alignment`（order 10）— 状态栏位置，`left` / `right`，Default: `right`
-  - `kimiStatusPro.statusBar.utilizationColor.lt20`（order 16）— 利用率 <20% 时的文本颜色，Default: `#FFFFFF`
-  - `kimiStatusPro.statusBar.utilizationColor.lt40`（order 17）— 利用率 20–40% 时的文本颜色，Default: `#FFFF80`
-  - `kimiStatusPro.statusBar.utilizationColor.lt60`（order 18）— 利用率 40–60% 时的文本颜色，Default: `#00FF80`
-  - `kimiStatusPro.statusBar.utilizationColor.lt80`（order 19）— 利用率 60–80% 时的文本颜色，Default: `#FF80FF`
-  - `kimiStatusPro.statusBar.utilizationColor.gte80`（order 20）— 利用率 ≥80% 时的文本颜色，Default: `#FF0000`
+  - `claudeStatusPro.statusBar.alignment`（order 10）— 状态栏位置，`left` / `right`，Default: `right`
+  - `claudeStatusPro.statusBar.utilizationColor.lt20`（order 16）— 利用率 <20% 时的文本颜色，Default: `#FFFFFF`
+  - `claudeStatusPro.statusBar.utilizationColor.lt40`（order 17）— 利用率 20–40% 时的文本颜色，Default: `#FFFF80`
+  - `claudeStatusPro.statusBar.utilizationColor.lt60`（order 18）— 利用率 40–60% 时的文本颜色，Default: `#00FF80`
+  - `claudeStatusPro.statusBar.utilizationColor.lt80`（order 19）— 利用率 60–80% 时的文本颜色，Default: `#FF80FF`
+  - `claudeStatusPro.statusBar.utilizationColor.gte80`（order 20）— 利用率 ≥80% 时的文本颜色，Default: `#FF0000`
   - `utilizationToColor` 从模块级函数改为 `StatusBarPresenter` 实例方法，从 `ConfigService` 读取阈值颜色
 
 ## [0.2.16] - 2026-05-13
@@ -49,10 +49,10 @@
 - **开放 4 个已有但未暴露的设置项，并按功能分组** (`package.json`)
   - 参考 `claude-status` 工程的分组方式，为所有设置项添加 `order` 字段
   - 新增设置项（`ConfigService` 中已有 getter 但 `package.json` 未定义）：
-    - `kimiStatusPro.heatmapCycles5h`（order 61）— 热力图 5h 周期数，Range: 1–60，Default: 30
-    - `kimiStatusPro.heatmapCycles7d`（order 62）— 热力图 7d 周期数，Range: 1–60，Default: 30
-    - `kimiStatusPro.heatmapCycles30d`（order 63）— 热力图 30d 周期数，Range: 1–60，Default: 12
-    - `kimiStatusPro.costCurveMaxPoints`（order 65）— 费用曲线最大点数，Range: 200–20000，Default: 2000
+    - `claudeStatusPro.heatmapCycles5h`（order 61）— 热力图 5h 周期数，Range: 1–60，Default: 30
+    - `claudeStatusPro.heatmapCycles7d`（order 62）— 热力图 7d 周期数，Range: 1–60，Default: 30
+    - `claudeStatusPro.heatmapCycles30d`（order 63）— 热力图 30d 周期数，Range: 1–60，Default: 12
+    - `claudeStatusPro.costCurveMaxPoints`（order 65）— 费用曲线最大点数，Range: 200–20000，Default: 2000
   - 分组顺序：General (1) → Status Bar (14–15) → Refresh & Data (20–22) → Budget (50) → Dashboard Charts (60–66) → Misc (70)
 
 ## [0.2.15] - 2026-05-13
@@ -66,7 +66,7 @@
 
 ### Fixed
 - **Dashboard 语言切换按钮点击无反应** (`src/presenters/dashboard.ts`)
-  - 根因：`kimiStatusPro.language` 已从 `package.json` 移除，`ConfigService.setLanguage()` 调用 `update('language')` 时 VS Code 会抛异常（未注册配置键），导致 `doToggleLanguage()` 中断，后续 `dispatch` 和 HTML 重建均未执行
+  - 根因：`claudeStatusPro.language` 已从 `package.json` 移除，`ConfigService.setLanguage()` 调用 `update('language')` 时 VS Code 会抛异常（未注册配置键），导致 `doToggleLanguage()` 中断，后续 `dispatch` 和 HTML 重建均未执行
   - 修复：`setLanguage()` 包裹 try-catch，失败时静默跳过，确保 `store.dispatch(UI_SET_LANGUAGE)` 和 `getHtml()` 始终执行
 
 ## [0.2.13] - 2026-05-13
@@ -82,7 +82,7 @@
 ## [0.2.12] - 2026-05-13
 
 ### Removed
-- **删除 `kimiStatusPro.language` 设置项** (`package.json`)
+- **删除 `claudeStatusPro.language` 设置项** (`package.json`)
   - Dashboard 语言切换仅通过面板内的 `btn-lang` 按钮实时生效
   - VS Code 设置层面的语言变更无法实时重建 Dashboard HTML，故移除该设置项避免误导
 
@@ -90,7 +90,7 @@
 
 ### Added
 - **可配置的默认模型名** (`src/config.ts`, `src/services/historyService.ts`, `src/presenters/dashboard.ts`, `package.json`)
-  - 新增设置项 `kimiStatusPro.defaultModelName`，默认值为 `Kimi-2.6`
+  - 新增设置项 `claudeStatusPro.defaultModelName`，默认值为 `Kimi-2.6`
   - 当 UsageEntry 没有模型信息时，所有显示模型名的地方（Dashboard model breakdown、Chart.js legend、Tooltip）均使用默认模型名替代 `unknown`
 
 ## [0.2.9] - 2026-05-13
@@ -186,9 +186,9 @@
   - `usageEntries: UsageEntry[]` added to `AppState`; `LOCAL_ESTIMATE` payload carries raw entries
   - Both short and long ticks dispatch entries into memory so presenters never read disk
 - **Dashboard configuration** (`src/config.ts`, `package.json`)
-  - `kimiStatusPro.weeklyBudget` — weekly budget warning threshold (0 = disabled)
-  - `kimiStatusPro.chartHeightRatio` — canvas height ratio (0.2–1.0)
-  - `kimiStatusPro.heatmapDays` — heatmap range (30–365 days)
+  - `claudeStatusPro.weeklyBudget` — weekly budget warning threshold (0 = disabled)
+  - `claudeStatusPro.chartHeightRatio` — canvas height ratio (0.2–1.0)
+  - `claudeStatusPro.heatmapDays` — heatmap range (30–365 days)
 - **i18n** (`src/i18n.ts`) — 30+ new bilingual keys for all dashboard cards, tabs, tables, and heatmap labels
 
 ### Tests
@@ -207,8 +207,8 @@
 
 ### Added
 - **Configurable update animation duration and interval** (`src/config.ts`, `package.json`)
-  - `kimiStatusPro.updateAnimationDurationMs` (default: 5000ms, range: 500–10000ms)
-  - `kimiStatusPro.updateAnimationIntervalMs` (default: 300ms, range: 100–2000ms)
+  - `claudeStatusPro.updateAnimationDurationMs` (default: 5000ms, range: 500–10000ms)
+  - `claudeStatusPro.updateAnimationIntervalMs` (default: 300ms, range: 100–2000ms)
   - Controls how long and how fast the moon animation plays when data changes; timer resets if another update arrives during playback
 - **Keep itemWindow visible during moon animation** (`src/presenters/statusBar.ts`)
   - `itemWindow` (5h window) now stays visible and continues to show normal data while `itemWeekly` plays the moon animation
@@ -276,7 +276,7 @@
   - File-to-doc mapping for all `src/` modules
   - `// DESIGN:` comment markers added to 13 source files for quick lookup
 - **`_pauseSignal` configuration registration** (`package.json`)
-  - Registers `kimiStatusPro._pauseSignal` to prevent "not registered" error on pause toggle
+  - Registers `claudeStatusPro._pauseSignal` to prevent "not registered" error on pause toggle
 
 ### Fixed
 - **Pause button `_pauseSignal` error** (`package.json`, `src/extension.ts`)
@@ -331,7 +331,7 @@
 
 ### Added
 - **Data retention period configuration** (`package.json`, `src/config.ts`, `src/services/localUsageService.ts`)
-  - New setting `kimiStatusPro.dataRetentionDays` (default: 365, range: 30–3650)
+  - New setting `claudeStatusPro.dataRetentionDays` (default: 365, range: 30–3650)
   - LocalUsageService discards entries older than retention period during scan
 - **Coding standards document** (`docs/CODING_STANDARDS.md`)
   - Disk access isolation rule: only LocalUsageService and CacheService may touch disk
@@ -453,7 +453,7 @@
   - Language switch immediately rebuilds WebView HTML with new locale
   - Cost display elements (`cost-5h`, `cost-7d`) added with null-safe updates
 - **Short refresh interval config** (`src/config.ts`, `package.json`)
-  - New setting `kimiStatusPro.shortRefreshIntervalSeconds` (default 5s, range 1-60)
+  - New setting `claudeStatusPro.shortRefreshIntervalSeconds` (default 5s, range 1-60)
 - **Scheduler short tick precision test** (`test/scheduler.test.ts`)
   - Validates 5s tick produces non-integer decimal estimates after calibration
 
@@ -511,7 +511,7 @@
   - Added `pctOrCompute` to derive percentage when API omits `used_pct`
 - **OAuth login popup** (`src/services/authService.ts`, `src/extension.ts`)
   - Implemented full OAuth device-code flow (`startOAuthFlow`)
-  - Status bar shows `$(key) Kimi: sign in` with command `kimiStatusPro.signIn` when auth is missing
+  - Status bar shows `$(key) Kimi: sign in` with command `claudeStatusPro.signIn` when auth is missing
   - Status bar shows `$(warning) Kimi: auth failed` with retry command on auth failure
 
 ### Changed
@@ -539,7 +539,7 @@
 ## [0.0.1] - 2026-05-11
 
 ### Added
-- **KimiStatusPro v2 Phase 1 rebuild** (`src/`)
+- **ClaudeStatusPro v2 Phase 1 rebuild** (`src/`)
   - Store + reducer single source of truth (`src/store.ts`)
   - setTimeout chain scheduler with overlap prevention (`src/services/scheduler.ts`)
   - 3-entry status bar: weekly 🌘, window 5️⃣, pause ⏸️ (`src/presenters/statusBar.ts`)

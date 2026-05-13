@@ -2,14 +2,14 @@
 import * as vscode from 'vscode';
 import { KimiOAuthCredentials } from './types';
 
-const SECRET_API_KEY = 'kimiStatusPro.apiKey';
-const SECRET_OAUTH = 'kimiStatusPro.oauthCredentials';
+const SECRET_API_KEY = 'claudeStatusPro.apiKey';
+const SECRET_OAUTH = 'claudeStatusPro.oauthCredentials';
 
 let outputChannel: vscode.OutputChannel | undefined;
 
 export function getOutputChannel(): vscode.OutputChannel {
   if (!outputChannel) {
-    outputChannel = vscode.window.createOutputChannel('KimiStatusPro');
+    outputChannel = vscode.window.createOutputChannel('ClaudeStatusPro');
   }
   return outputChannel;
 }

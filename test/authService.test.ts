@@ -28,7 +28,7 @@ describe('AuthService', () => {
     const auth = AuthService.getInstance();
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test123');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test123');
     const token = await auth.resolveToken();
     expect(token).to.equal('sk-test123');
   });
@@ -37,9 +37,9 @@ describe('AuthService', () => {
     const auth = AuthService.getInstance();
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
     const t1 = await auth.resolveToken();
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-changed'); // modify storage
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-changed'); // modify storage
     const t2 = await auth.resolveToken(); // should return cached value
     expect(t1).to.equal('sk-test');
     expect(t2).to.equal('sk-test');
@@ -49,10 +49,10 @@ describe('AuthService', () => {
     const auth = AuthService.getInstance();
     const ctx = makeContext();
     auth.init(ctx.secrets);
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-test');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-test');
     await auth.resolveToken();
     auth.invalidate();
-    await ctx.secrets.store('kimiStatusPro.apiKey', 'sk-new');
+    await ctx.secrets.store('claudeStatusPro.apiKey', 'sk-new');
     const token = await auth.resolveToken();
     expect(token).to.equal('sk-new');
   });

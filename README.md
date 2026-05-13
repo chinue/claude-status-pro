@@ -1,19 +1,19 @@
-# KimiStatusPro
+# ClaudeStatusPro
 
-> A professional VS Code extension for real-time monitoring of **Kimi Code** quota usage, rebuilt from the ground up with a clean architecture.
+> A professional VS Code extension for real-time monitoring of **Claude Code** quota usage, rebuilt from the ground up with a clean architecture.
 
-[![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/yourname/kimi-status-pro)
+[![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/yourname/claude-status-pro)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **English** | [中文](README.zh-CN.md)
 
 ---
 
-## What is KimiStatusPro?
+## What is ClaudeStatusPro?
 
-**KimiStatusPro** is a VS Code extension that displays your **Kimi Code** usage quota directly in the status bar — with a beautiful dashboard, local file estimation, and zero unnecessary disk I/O.
+**ClaudeStatusPro** is a VS Code extension that displays your **Claude Code** usage quota directly in the status bar — with a beautiful dashboard, local file estimation, and zero unnecessary disk I/O.
 
-Unlike the original `kimi-status-ex` (v0.3.x) which suffered from architectural rot (dual timers, race conditions, sync file reads), **KimiStatusPro** is a complete rebuild with:
+Unlike the original `kimi-status-ex` (v0.3.x) which suffered from architectural rot (dual timers, race conditions, sync file reads), **ClaudeStatusPro** is a complete rebuild with:
 
 - **Single source of truth** — a lightweight Store + reducer pattern
 - **Single scheduler** — one `setTimeout` chain, no overlapping API calls
@@ -49,7 +49,7 @@ Unlike the original `kimi-status-ex` (v0.3.x) which suffered from architectural 
 
 ### Architecture Highlights
 
-| Feature | v0.3.x | KimiStatusPro |
+| Feature | v0.3.x | ClaudeStatusPro |
 |---|---|---|
 | State management | `DataManager` direct mutation | `Store` + `dispatch(action)` |
 | Scheduler | Dual `setInterval` + locks | Single `setTimeout` chain |
@@ -63,13 +63,13 @@ Unlike the original `kimi-status-ex` (v0.3.x) which suffered from architectural 
 
 ### From VS Code Marketplace
 
-Search for **"KimiStatusPro"** in the Extensions panel and install.
+Search for **"ClaudeStatusPro"** in the Extensions panel and install.
 
 ### From Source
 
 ```bash
-git clone https://github.com/yourname/kimi-status-pro.git
-cd kimi-status-pro
+git clone https://github.com/yourname/claude-status-pro.git
+cd claude-status-pro
 npm install
 npm run build
 # Press F5 in VS Code to launch the Extension Host
@@ -79,9 +79,9 @@ npm run build
 
 ## Authentication
 
-KimiStatusPro supports three authentication methods (auto-detected in order):
+ClaudeStatusPro supports three authentication methods (auto-detected in order):
 
-1. **API Key** — Set via command `KimiStatusPro: Set API Key`
+1. **API Key** — Set via command `ClaudeStatusPro: Set API Key`
 2. **OAuth** — Automatic refresh before token expiry
 3. **CLI Credentials** — Fallback to `~/.kimi/credentials.json`
 
@@ -91,11 +91,11 @@ KimiStatusPro supports three authentication methods (auto-detected in order):
 
 | Setting | Default | Description |
 |---|---|---|
-| `kimiStatusPro.language` | `auto` | Display language (`auto` / `en` / `zh-CN`) |
-| `kimiStatusPro.refreshIntervalSeconds` | `60` | API refresh interval (min 30s) |
-| `kimiStatusPro.displayMode` | `percent` | Status bar mode (`percent` / `absolute`) |
-| `kimiStatusPro.statusBar.alignment` | `right` | Status bar position (`left` / `right`) |
-| `kimiStatusPro.rateLimitApi.enabled` | `true` | Enable automatic API polling |
+| `claudeStatusPro.language` | `auto` | Display language (`auto` / `en` / `zh-CN`) |
+| `claudeStatusPro.refreshIntervalSeconds` | `60` | API refresh interval (min 30s) |
+| `claudeStatusPro.displayMode` | `percent` | Status bar mode (`percent` / `absolute`) |
+| `claudeStatusPro.statusBar.alignment` | `right` | Status bar position (`left` / `right`) |
+| `claudeStatusPro.rateLimitApi.enabled` | `true` | Enable automatic API polling |
 
 ---
 
@@ -103,11 +103,11 @@ KimiStatusPro supports three authentication methods (auto-detected in order):
 
 | Command | ID | Description |
 |---|---|---|
-| Refresh | `kimiStatusPro.refresh` | Force an immediate API refresh |
-| Sign In | `kimiStatusPro.signIn` | Set API Key or initiate OAuth |
-| Sign Out | `kimiStatusPro.signOut` | Clear all credentials |
-| Show Dashboard | `kimiStatusPro.showDashboard` | Open the usage dashboard |
-| Toggle Pause | `kimiStatusPro.togglePause` | Pause/resume auto-refresh (synced across windows) |
+| Refresh | `claudeStatusPro.refresh` | Force an immediate API refresh |
+| Sign In | `claudeStatusPro.signIn` | Set API Key or initiate OAuth |
+| Sign Out | `claudeStatusPro.signOut` | Clear all credentials |
+| Show Dashboard | `claudeStatusPro.showDashboard` | Open the usage dashboard |
+| Toggle Pause | `claudeStatusPro.togglePause` | Pause/resume auto-refresh (synced across windows) |
 
 ---
 

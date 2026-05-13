@@ -1,13 +1,13 @@
 {
-  "name": "kimi-status-pro",
-  "displayName": "KimiStatusPro",
-  "description": "Monitor Kimi Code quota usage in real-time",
+  "name": "claude-status-pro",
+  "displayName": "ClaudeStatusPro",
+  "description": "Monitor Claude Code quota usage in real-time",
   "version": "0.2.20",
   "publisher": "kayuii",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chinue/kimi-status-pro"
+    "url": "https://github.com/chinue/claude-status-pro"
   },
   "engines": {
     "vscode": "^1.74.0"
@@ -23,40 +23,40 @@
   "contributes": {
     "commands": [
       {
-        "command": "kimiStatusPro.refresh",
-        "title": "KimiStatusPro: Refresh",
+        "command": "claudeStatusPro.refresh",
+        "title": "ClaudeStatusPro: Refresh",
         "icon": "$(refresh)"
       },
       {
-        "command": "kimiStatusPro.signIn",
-        "title": "KimiStatusPro: Sign In (OAuth)",
+        "command": "claudeStatusPro.signIn",
+        "title": "ClaudeStatusPro: Sign In (OAuth)",
         "icon": "$(sign-in)"
       },
       {
-        "command": "kimiStatusPro.signOut",
-        "title": "KimiStatusPro: Sign Out",
+        "command": "claudeStatusPro.signOut",
+        "title": "ClaudeStatusPro: Sign Out",
         "icon": "$(sign-out)"
       },
       {
-        "command": "kimiStatusPro.setApiKey",
-        "title": "KimiStatusPro: Set API Key",
+        "command": "claudeStatusPro.setApiKey",
+        "title": "ClaudeStatusPro: Set API Key",
         "icon": "$(key)"
       },
       {
-        "command": "kimiStatusPro.showDashboard",
-        "title": "KimiStatusPro: Show Dashboard",
+        "command": "claudeStatusPro.showDashboard",
+        "title": "ClaudeStatusPro: Show Dashboard",
         "icon": "$(graph)"
       },
       {
-        "command": "kimiStatusPro.togglePause",
-        "title": "KimiStatusPro: Toggle Pause",
+        "command": "claudeStatusPro.togglePause",
+        "title": "ClaudeStatusPro: Toggle Pause",
         "icon": "$(debug-pause)"
       }
     ],
     "configuration": {
-      "title": "KimiStatusPro",
+      "title": "ClaudeStatusPro",
       "properties": {
-        "kimiStatusPro.displayMode": {
+        "claudeStatusPro.displayMode": {
           "type": "string",
           "enum": [
             "percent",
@@ -66,7 +66,7 @@
           "order": 1,
           "description": "Status bar display mode. percent: show percentage with mini bar. absolute: show used/limit count."
         },
-        "kimiStatusPro.statusBar.alignment": {
+        "claudeStatusPro.statusBar.alignment": {
           "type": "string",
           "enum": [
             "left",
@@ -76,7 +76,7 @@
           "order": 10,
           "description": "Status bar alignment. left: aligned to the left side of the status bar. right: aligned to the right side."
         },
-        "kimiStatusPro.updateAnimationDurationMs": {
+        "claudeStatusPro.updateAnimationDurationMs": {
           "type": "number",
           "default": 5000,
           "minimum": 500,
@@ -84,7 +84,7 @@
           "order": 14,
           "description": "Duration of the moon update animation in milliseconds. Range: 500–10000. When new data arrives during animation, the timer resets."
         },
-        "kimiStatusPro.updateAnimationIntervalMs": {
+        "claudeStatusPro.updateAnimationIntervalMs": {
           "type": "number",
           "default": 300,
           "minimum": 100,
@@ -92,44 +92,44 @@
           "order": 15,
           "description": "Frame interval of the moon update animation in milliseconds. Range: 100–2000. Controls how fast the moon phases cycle."
         },
-        "kimiStatusPro.statusBar.utilizationColor.lt20": {
+        "claudeStatusPro.statusBar.utilizationColor.lt20": {
           "type": "string",
           "default": "#FFFFFF",
           "order": 16,
           "description": "Status bar text color when utilization is below 20%. Hex color string."
         },
-        "kimiStatusPro.statusBar.utilizationColor.lt40": {
+        "claudeStatusPro.statusBar.utilizationColor.lt40": {
           "type": "string",
           "default": "#FFFF80",
           "order": 17,
           "description": "Status bar text color when utilization is 20%–40%. Hex color string."
         },
-        "kimiStatusPro.statusBar.utilizationColor.lt60": {
+        "claudeStatusPro.statusBar.utilizationColor.lt60": {
           "type": "string",
           "default": "#00FF80",
           "order": 18,
           "description": "Status bar text color when utilization is 40%–60%. Hex color string."
         },
-        "kimiStatusPro.statusBar.utilizationColor.lt80": {
+        "claudeStatusPro.statusBar.utilizationColor.lt80": {
           "type": "string",
           "default": "#FF80FF",
           "order": 19,
           "description": "Status bar text color when utilization is 60%–80%. Hex color string."
         },
-        "kimiStatusPro.statusBar.utilizationColor.gte80": {
+        "claudeStatusPro.statusBar.utilizationColor.gte80": {
           "type": "string",
           "default": "#FF0000",
           "order": 20,
           "description": "Status bar text color when utilization is 80% or above. Hex color string."
         },
-        "kimiStatusPro.refreshIntervalSeconds": {
+        "claudeStatusPro.refreshIntervalSeconds": {
           "type": "number",
           "default": 60,
           "minimum": 30,
           "order": 30,
           "description": "API refresh interval in seconds. Range: 30–∞. Long tick fetches quota from API."
         },
-        "kimiStatusPro.shortRefreshIntervalSeconds": {
+        "claudeStatusPro.shortRefreshIntervalSeconds": {
           "type": "number",
           "default": 5,
           "minimum": 1,
@@ -137,7 +137,7 @@
           "order": 31,
           "description": "Local estimation refresh interval in seconds. Range: 1–60. Short tick reads local JSONL and estimates usage without API call."
         },
-        "kimiStatusPro.dataRetentionDays": {
+        "claudeStatusPro.dataRetentionDays": {
           "type": "number",
           "default": 365,
           "minimum": 30,
@@ -145,14 +145,14 @@
           "order": 32,
           "description": "Local usage data retention period in days. Range: 30–3650. Older entries are discarded during scan."
         },
-        "kimiStatusPro.weeklyBudget": {
+        "claudeStatusPro.weeklyBudget": {
           "type": "number",
           "default": 0,
           "minimum": 0,
           "order": 50,
           "description": "Weekly budget in RMB. 0 means disabled. When cost7d exceeds this value, a warning is shown."
         },
-        "kimiStatusPro.heatmapDays": {
+        "claudeStatusPro.heatmapDays": {
           "type": "number",
           "default": 90,
           "minimum": 30,
@@ -160,7 +160,7 @@
           "order": 60,
           "description": "Number of days to show in the usage history heatmap."
         },
-        "kimiStatusPro.heatmapCycles5h": {
+        "claudeStatusPro.heatmapCycles5h": {
           "type": "number",
           "default": 30,
           "minimum": 1,
@@ -168,7 +168,7 @@
           "order": 61,
           "description": "Number of 5h cycles to display in the heatmap. Range: 1–60."
         },
-        "kimiStatusPro.heatmapCycles7d": {
+        "claudeStatusPro.heatmapCycles7d": {
           "type": "number",
           "default": 30,
           "minimum": 1,
@@ -176,7 +176,7 @@
           "order": 62,
           "description": "Number of 7d cycles to display in the heatmap. Range: 1–60."
         },
-        "kimiStatusPro.heatmapCycles30d": {
+        "claudeStatusPro.heatmapCycles30d": {
           "type": "number",
           "default": 12,
           "minimum": 1,
@@ -184,7 +184,7 @@
           "order": 63,
           "description": "Number of 30d cycles to display in the heatmap. Range: 1–60."
         },
-        "kimiStatusPro.costCurveMaxPoints": {
+        "claudeStatusPro.costCurveMaxPoints": {
           "type": "number",
           "default": 2000,
           "minimum": 200,
@@ -192,7 +192,7 @@
           "order": 65,
           "description": "Maximum number of data points for the cost curve. Range: 200–20000."
         },
-        "kimiStatusPro.chartHeightRatio": {
+        "claudeStatusPro.chartHeightRatio": {
           "type": "number",
           "default": 0.4,
           "minimum": 0.2,
@@ -200,53 +200,53 @@
           "order": 66,
           "description": "Height ratio for dashboard charts (canvas height = width * ratio)."
         },
-        "kimiStatusPro.pricing.models.kimi26.inputPerMillion": {
+        "claudeStatusPro.pricing.models.kimi26.inputPerMillion": {
           "type": "number",
           "default": 6.5,
           "minimum": 0,
           "order": 80,
           "description": "Kimi-2.6 input token price per million (RMB)."
         },
-        "kimiStatusPro.pricing.models.kimi26.outputPerMillion": {
+        "claudeStatusPro.pricing.models.kimi26.outputPerMillion": {
           "type": "number",
           "default": 27,
           "minimum": 0,
           "order": 81,
           "description": "Kimi-2.6 output token price per million (RMB)."
         },
-        "kimiStatusPro.pricing.models.kimi26.cacheReadPerMillion": {
+        "claudeStatusPro.pricing.models.kimi26.cacheReadPerMillion": {
           "type": "number",
           "default": 1.1,
           "minimum": 0,
           "order": 82,
           "description": "Kimi-2.6 cache-read token price per million (RMB)."
         },
-        "kimiStatusPro.pricing.models.kimi26.cacheCreatePerMillion": {
+        "claudeStatusPro.pricing.models.kimi26.cacheCreatePerMillion": {
           "type": "number",
           "default": 6.5,
           "minimum": 0,
           "order": 83,
           "description": "Kimi-2.6 cache-write token price per million (RMB)."
         },
-        "kimiStatusPro.pricing.officialUrl": {
+        "claudeStatusPro.pricing.officialUrl": {
           "type": "string",
           "default": "https://platform.kimi.com/docs/pricing/chat-k26",
           "order": 84,
           "description": "Official pricing page URL shown in Dashboard."
         },
-        "kimiStatusPro.pricing.officialDate": {
+        "claudeStatusPro.pricing.officialDate": {
           "type": "string",
           "default": "2026-05-13",
           "order": 85,
           "description": "Pricing publish date displayed next to the official pricing link (YYYY-MM-DD)."
         },
-        "kimiStatusPro.defaultModelName": {
+        "claudeStatusPro.defaultModelName": {
           "type": "string",
           "default": "Kimi-2.6",
           "order": 70,
           "description": "Default model name displayed when usage entry has no model information."
         },
-        "kimiStatusPro._pauseSignal": {
+        "claudeStatusPro._pauseSignal": {
           "type": "number",
           "default": 0,
           "description": "Internal: pause state broadcast signal (timestamp). Do not modify manually."

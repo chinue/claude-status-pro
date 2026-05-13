@@ -26,7 +26,7 @@ export class DashboardPanel {
     const i18n = makeT(locale);
 
     this.panel = vscode.window.createWebviewPanel(
-      'kimiStatusProDashboard',
+      'claudeStatusProDashboard',
       i18n('dashboard.title'),
       vscode.ViewColumn.Beside,
       { enableScripts: true, retainContextWhenHidden: true }
@@ -60,7 +60,7 @@ export class DashboardPanel {
         this.sendUpdate(this.store.getState());
         break;
       case 'refresh':
-        vscode.commands.executeCommand('kimiStatusPro.refresh');
+        vscode.commands.executeCommand('claudeStatusPro.refresh');
         break;
       case 'toggleMode': {
         const next = ConfigService.getInstance().displayMode === 'percent' ? 'absolute' : 'percent';
@@ -72,7 +72,7 @@ export class DashboardPanel {
         break;
       }
       case 'openSettings':
-        void vscode.commands.executeCommand('workbench.action.openSettings', '@ext:kayuii.kimi-status-pro');
+        void vscode.commands.executeCommand('workbench.action.openSettings', '@ext:kayuii.claude-status-pro');
         break;
       case 'getCostCurveOptions': {
         this.sendCostCurveOptions();
@@ -100,7 +100,7 @@ export class DashboardPanel {
         const amount = msg.amount;
         if (amount === null || typeof amount === 'number') {
           void ConfigService.getInstance().setWeeklyBudget(typeof amount === 'number' ? amount : null)
-            .then(() => vscode.commands.executeCommand('kimiStatusPro.refresh'));
+            .then(() => vscode.commands.executeCommand('claudeStatusPro.refresh'));
         }
         break;
       }
