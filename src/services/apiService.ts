@@ -1,4 +1,4 @@
-// 🔀 Provider boundary: API format is Kimi-specific.
+// 🔀 Provider boundary: API format is Claude-specific.
 // AGENTS: err->try-catch | network-fallback
 // If adapting to another provider, replace this module.
 
@@ -6,7 +6,7 @@
 import fetch from 'node-fetch';
 import { QuotaData, ApiResponse } from '../types';
 
-const API_URL = 'https://api.kimi.com/coding/v1/usages';
+const API_URL = 'https://api.anthropic.com/v1/messages';
 
 export class ApiService {
   private static instance: ApiService;
@@ -19,23 +19,31 @@ export class ApiService {
   async fetchQuota(token: string): Promise<ApiResponse> {
     try {
       const resp = await fetch(API_URL, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'User-Agent': 'KimiCLI/1.6',
-          'Accept': 'application/json',
+          'anthropic-version': '2023-06-01',
+          'anthropic-beta': 'oauth-2025-04-20',
+          'content-type': 'application/json',
         },
+        body: JSON.stringify({
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 1,
+          messages: [{ role: 'user', content: '.' }],
+        }),
       });
 
-      if (resp.status === 401 || resp.status === 403) {
+      if (resp.status === 403) {
+        return { ok: false, error: 'Rate limit quota exhausted', authFailed: true };
+      }
+      if (resp.status === 401) {
         return { ok: false, error: `HTTP ${resp.status}`, authFailed: true };
       }
       if (!resp.ok) {
         return { ok: false, error: `HTTP ${resp.status}` };
       }
 
-      const json = await resp.json();
-      const data = this.parseResponse(json);
+      const data = this.parseHeaders(resp.headers);
       return { ok: true, data };
     } catch (err) {
       const msg = (err as Error).message;
@@ -44,56 +52,44 @@ export class ApiService {
     }
   }
 
-  private parseResponse(json: any): QuotaData {
-    // Mirrors the official Kimi API shape:
-    //   json.usage          -> weekly quota
-    //   json.limits[0].detail -> window quota
-    const usage = json.usage ?? {};
-    const win = json.limits?.[0]?.detail ?? {};
+  private parseHeaders(headers: any): QuotaData {
+    const h = (key: string): string | undefined => {
+      const raw = headers.get?.(key);
+      if (typeof raw === 'string') { return raw; }
+      return undefined;
+    };
 
-    const weeklyLimit = toInt(usage.limit);
-    const weeklyUsed = toInt(usage.used);
-    const windowLimit = toInt(win.limit);
-    const windowUsed = toInt(win.used);
+    const weeklyUsedPct = parsePct(h('anthropic-ratelimit-unified-7d-utilization'));
+    const windowUsedPct = parsePct(h('anthropic-ratelimit-unified-5h-utilization'));
+    const weeklyResetAt = parseReset(h('anthropic-ratelimit-unified-7d-reset'));
+    const windowResetAt = parseReset(h('anthropic-ratelimit-unified-5h-reset'));
 
+    // Claude headers do not provide absolute usage numbers
     return {
-      weeklyLimit,
-      weeklyUsed,
-      weeklyUsedPct: pctOrCompute(usage.used_pct, weeklyUsed, weeklyLimit),
-      weeklyResetAt: toMs(usage.resetTime),
-      windowLimit,
-      windowUsed,
-      windowRemaining: toInt(win.remaining),
-      windowUsedPct: pctOrCompute(win.used_pct, windowUsed, windowLimit),
-      windowResetAt: toMs(win.resetTime),
-      parallelLimit: toInt(json.parallel?.limit),
+      weeklyLimit: 0,
+      weeklyUsed: 0,
+      weeklyUsedPct,
+      weeklyResetAt,
+      windowLimit: 0,
+      windowUsed: 0,
+      windowRemaining: 0,
+      windowUsedPct,
+      windowResetAt,
+      parallelLimit: 0,
     };
   }
 }
 
-function toInt(v: any): number {
-  const n = typeof v === 'number' ? v : parseInt(String(v), 10);
-  return isNaN(n) ? 0 : n;
+function parsePct(v: string | undefined): number {
+  if (v === undefined) { return 0; }
+  const n = parseFloat(v);
+  if (isNaN(n)) { return 0; }
+  return Math.min(100, Math.max(0, n * 100));
 }
 
-function pctOrCompute(pct: any, used: number, limit: number): number {
-  if (typeof pct === 'number' && !isNaN(pct)) return Math.min(100, Math.max(0, pct));
-  if (typeof pct === 'string') {
-    const n = parseFloat(pct);
-    if (!isNaN(n)) return Math.min(100, Math.max(0, n));
-  }
-  if (limit > 0) return Math.min(100, Math.max(0, (used / limit) * 100));
-  return 0;
-}
-
-function toMs(v: any): number {
-  if (typeof v === 'number') {
-    // Treat as seconds if it's small enough, otherwise milliseconds
-    return v < 1e12 ? v * 1000 : v;
-  }
-  if (typeof v === 'string') {
-    const d = new Date(v);
-    return isNaN(d.getTime()) ? 0 : d.getTime();
-  }
-  return 0;
+function parseReset(v: string | undefined): number {
+  if (v === undefined) { return 0; }
+  const n = parseFloat(v);
+  if (isNaN(n)) { return 0; }
+  return n * 1000;
 }

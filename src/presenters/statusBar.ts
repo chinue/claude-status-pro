@@ -14,7 +14,7 @@ import { AppState } from '../types';
 
 const STALE_THRESHOLD_MS = 120_000; // 2 minutes
 
-const MOON_FRAMES = ['\uD83C\uDF15', '\uD83C\uDF16', '\uD83C\uDF17', '\uD83C\uDF18'];
+const SPARKLE_FRAMES = ['\uD83C\uDF86', '\uD83C\uDF87', '\u2728'];
 // MOON_ANIMATION_INTERVAL_MS is now read from config.updateAnimationIntervalMs (default 300ms)
 
 function alignmentFromString(raw: string): vscode.StatusBarAlignment {
@@ -29,7 +29,7 @@ export class StatusBarPresenter {
   private disposables: vscode.Disposable[] = [];
   private updateAnimInterval: NodeJS.Timeout | null = null;
   private updateAnimTimeout: NodeJS.Timeout | null = null;
-  private moonFrame = 0;
+  private sparkleFrame = 0;
   private lastSeenWeeklyPct: number | null = null;
   private lastSeenWindowPct: number | null = null;
 
@@ -78,7 +78,7 @@ export class StatusBarPresenter {
 
       if (state.authStatus === 'missing') {
         this.stopUpdateAnimation();
-        this.itemWeekly.text = '$(key) Kimi: sign in';
+        this.itemWeekly.text = '$(key) Claude: sign in';
         this.itemWeekly.command = 'claudeStatusPro.signIn';
         this.itemWeekly.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         this.itemWeekly.color = new vscode.ThemeColor('statusBarItem.errorForeground');
@@ -88,7 +88,7 @@ export class StatusBarPresenter {
 
       if (state.error && state.authStatus === 'failed') {
         this.stopUpdateAnimation();
-        this.itemWeekly.text = '$(warning) Kimi: auth failed';
+        this.itemWeekly.text = '$(warning) Claude: auth failed';
         this.itemWeekly.command = 'claudeStatusPro.signIn';
         this.itemWeekly.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         this.itemWindow.hide();
@@ -106,7 +106,7 @@ export class StatusBarPresenter {
         return;
       }
 
-      // Detect meaningful data changes and trigger moon animation
+      // Detect meaningful data changes and trigger sparkle animation
       const weeklyPct = resolveWeeklyPct(state);
       const windowPct = resolveWindowPct(state);
       const isFirstData = this.lastSeenWeeklyPct === null && this.lastSeenWindowPct === null;
@@ -155,12 +155,12 @@ export class StatusBarPresenter {
 
       if (this.config.displayMode === 'absolute') {
         if (hasApiData) {
-          this.itemWeekly.text = `\uD83C\uDF18 Kimi:${state.quota!.weeklyUsed}/${state.quota!.weeklyLimit}${errorIndicator}`;
+          this.itemWeekly.text = `\u2734 Claude:${state.quota!.weeklyUsed}/${state.quota!.weeklyLimit}${errorIndicator}`;
         } else {
-          this.itemWeekly.text = `\uD83C\uDF18 Kimi:${weeklyPct > 0 ? '~' + formatPercent(weeklyPct, 1) : '—'}${estimateIndicator}${errorIndicator}`;
+          this.itemWeekly.text = `\u2734 Claude:${weeklyPct > 0 ? '~' + formatPercent(weeklyPct, 1) : '—'}${estimateIndicator}${errorIndicator}`;
         }
       } else {
-        this.itemWeekly.text = `\uD83C\uDF18 Kimi:${formatPercent(weeklyPct, 1)}${estimateIndicator}${errorIndicator}`;
+        this.itemWeekly.text = `\u2734 Claude:${formatPercent(weeklyPct, 1)}${estimateIndicator}${errorIndicator}`;
       }
 
       this.itemWeekly.command = 'claudeStatusPro.showDashboard';
@@ -323,16 +323,16 @@ export class StatusBarPresenter {
       return;
     }
 
-    // Start new animation — moon cycles while keeping the live percentage visible
-    this.moonFrame = 0;
+    // Start new animation — sparkle cycles while keeping the live percentage visible
+    this.sparkleFrame = 0;
     const weeklyPct = this.lastSeenWeeklyPct ?? 0;
-    this.itemWeekly.text = `${MOON_FRAMES[0]} Kimi:${formatPercent(weeklyPct, 1)}`;
+    this.itemWeekly.text = `${SPARKLE_FRAMES[0]} Claude:${formatPercent(weeklyPct, 1)}`;
     this.itemWeekly.show();
 
     this.updateAnimInterval = setInterval(() => {
-      this.moonFrame = (this.moonFrame + 1) % MOON_FRAMES.length;
+      this.sparkleFrame = (this.sparkleFrame + 1) % SPARKLE_FRAMES.length;
       const liveWeeklyPct = this.lastSeenWeeklyPct ?? 0;
-      this.itemWeekly.text = `${MOON_FRAMES[this.moonFrame]} Kimi:${formatPercent(liveWeeklyPct, 1)}`;
+      this.itemWeekly.text = `${SPARKLE_FRAMES[this.sparkleFrame]} Claude:${formatPercent(liveWeeklyPct, 1)}`;
     }, this.config.updateAnimationIntervalMs);
 
     this.updateAnimTimeout = setTimeout(() => {

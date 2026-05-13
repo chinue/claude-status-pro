@@ -251,11 +251,11 @@ describe('Phase 3 calc helpers', () => {
 
   describe('fmtRmb', () => {
     it('formats with ¥ and 2 decimals', () => {
-      expect(fmtRmb(12.345)).to.equal('¥12.35');
-      expect(fmtRmb(0)).to.equal('¥0.00');
+      expect(fmtRmb(12.345)).to.equal('$12.35');
+      expect(fmtRmb(0)).to.equal('$0.00');
     });
     it('handles non-finite', () => {
-      expect(fmtRmb(NaN)).to.equal('¥0.00');
+      expect(fmtRmb(NaN)).to.equal('$0.00');
     });
   });
 

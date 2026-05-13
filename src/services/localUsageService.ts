@@ -1,16 +1,15 @@
 // DESIGN: v2-local-estimation-design.md
 // AGENTS: err->try-catch | retention->dataRetentionDays | disk-OK
-// 🔀 Provider boundary: JSONL path and format are Kimi-specific.
+// 🔀 Provider boundary: JSONL path and format are Claude-specific.
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { TokenPricing, UsageEntry } from '../types';
+import { UsageEntry } from '../types';
 import { calculateCost, TokenUsage } from '../calc';
-import { log } from '../utils';
 import { ConfigService } from '../config';
 
-const SESSIONS_DIR = path.join(os.homedir(), '.kimi', 'sessions');
+const PROJECTS_DIR = path.join(os.homedir(), '.claude', 'projects');
 
 export interface LocalAggregatedUsage {
   tokensToday: number;
@@ -98,12 +97,12 @@ export class LocalUsageService {
     };
 
     try {
-      await fs.access(SESSIONS_DIR);
+      await fs.access(PROJECTS_DIR);
     } catch {
       return empty;
     }
 
-    const files = await this.enumerateWireJsonl(SESSIONS_DIR);
+    const files = await this.enumerateJsonlFiles(PROJECTS_DIR);
 
     // Remove stale fileStates for deleted files
     const currentFiles = new Set(files);
@@ -123,15 +122,15 @@ export class LocalUsageService {
     const cycleStart = opts?.cycleStartMs ?? window7dStart;
 
     const entries: UsageEntry[] = [];
-    const seenMessageIds = new Set<string>();
+    const seenIds = new Set<string>();
 
     for (const filePath of files) {
       const fileState = await this.updateFileState(filePath);
       for (const entry of fileState.entries) {
-        // Deduplicate by messageId (local to this scan)
+        // Deduplicate by requestId, fallback to message.id
         if (entry.messageId) {
-          if (seenMessageIds.has(entry.messageId)) continue;
-          seenMessageIds.add(entry.messageId);
+          if (seenIds.has(entry.messageId)) continue;
+          seenIds.add(entry.messageId);
         }
 
         // Discard entries older than retention period
@@ -205,8 +204,6 @@ export class LocalUsageService {
 
     const newEntries = this.parseText(text);
 
-
-
     const fileState: FileState = { mtimeMs: stat.mtimeMs, size: stat.size, entries: newEntries };
     this.fileStates.set(filePath, fileState);
     return fileState;
@@ -223,56 +220,76 @@ export class LocalUsageService {
     return entries;
   }
 
-  private async enumerateWireJsonl(dir: string): Promise<string[]> {
+  private async enumerateJsonlFiles(dir: string): Promise<string[]> {
     const results: string[] = [];
     try {
-      const sessionDirs = await fs.readdir(dir, { withFileTypes: true });
-      for (const sessionDir of sessionDirs) {
-        if (!sessionDir.isDirectory()) continue;
-        const sessionPath = path.join(dir, sessionDir.name);
-        try {
-          const convDirs = await fs.readdir(sessionPath, { withFileTypes: true });
-          for (const convDir of convDirs) {
-            if (!convDir.isDirectory()) continue;
-            const wirePath = path.join(sessionPath, convDir.name, 'wire.jsonl');
-            try {
-              await fs.access(wirePath);
-              results.push(wirePath);
-            } catch { /* ignore missing */ }
-          }
-        } catch { /* ignore unreadable session dir */ }
+      const projectDirs = await fs.readdir(dir, { withFileTypes: true });
+      for (const projectDir of projectDirs) {
+        if (!projectDir.isDirectory()) continue;
+        const projectPath = path.join(dir, projectDir.name);
+        const projectFiles = await this.walkJsonl(projectPath);
+        results.push(...projectFiles);
       }
     } catch { /* ignore */ }
+    return results;
+  }
+
+  private async walkJsonl(dir: string): Promise<string[]> {
+    const results: string[] = [];
+    try {
+      const entries = await fs.readdir(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          const subFiles = await this.walkJsonl(fullPath);
+          results.push(...subFiles);
+        } else if (entry.isFile() && entry.name.endsWith('.jsonl')) {
+          results.push(fullPath);
+        }
+      }
+    } catch { /* ignore unreadable dir */ }
     return results;
   }
 
   private parseLine(line: string): UsageEntry | null {
     try {
       const json = JSON.parse(line);
-      if (json.message?.type !== 'StatusUpdate') return null;
-      const payload = json.message.payload;
-      if (!payload?.token_usage) return null;
+      if (json.type !== 'assistant') return null;
 
-      const tu = payload.token_usage;
-      const usage: TokenUsage = {
-        inputOther: toInt(tu.input_other),
-        output: toInt(tu.output),
-        inputCacheRead: toInt(tu.input_cache_read),
-        inputCacheCreation: toInt(tu.input_cache_creation),
-      };
-      const modelName = payload.model || ConfigService.getInstance().defaultModelName;
+      const message = json.message || {};
+      const usage = message.usage;
+      if (!usage) return null;
+
+      const inputTokens = toInt(usage.input_tokens);
+      const outputTokens = toInt(usage.output_tokens);
+      const cacheReadTokens = toInt(usage.cache_read_input_tokens);
+      const cacheCreateTokens = toInt(usage.cache_creation_input_tokens);
+
+      const modelName = message.model || ConfigService.getInstance().defaultModelName;
       const pricing = ConfigService.getInstance().getPricing(modelName);
-      const cost = calculateCost(usage, pricing);
-      const timestamp = typeof json.timestamp === 'number' ? json.timestamp * 1000 : Date.now();
+
+      const tokenUsage: TokenUsage = {
+        inputOther: inputTokens,
+        output: outputTokens,
+        inputCacheRead: cacheReadTokens,
+        inputCacheCreation: cacheCreateTokens,
+      };
+      const cost = calculateCost(tokenUsage, pricing);
+
+      const timestamp = typeof json.timestamp === 'string'
+        ? new Date(json.timestamp).getTime()
+        : Date.now();
+
+      const id = json.requestId || message.id || null;
 
       return {
         timestamp,
-        inputOther: usage.inputOther,
-        output: usage.output,
-        inputCacheRead: usage.inputCacheRead,
-        inputCacheCreation: usage.inputCacheCreation,
+        inputOther: inputTokens,
+        output: outputTokens,
+        inputCacheRead: cacheReadTokens,
+        inputCacheCreation: cacheCreateTokens,
         cost,
-        messageId: payload.message_id ?? null,
+        messageId: id,
         model: modelName,
       };
     } catch {
@@ -285,11 +302,3 @@ function toInt(v: any): number {
   const n = typeof v === 'number' ? v : parseInt(String(v), 10);
   return isNaN(n) ? 0 : n;
 }
-
-/** Default pricing for kimi-k2.6 (RMB). */
-export const DEFAULT_PRICING: TokenPricing = {
-  inputPerMillion: 6.50,
-  outputPerMillion: 27.00,
-  cacheReadPerMillion: 1.10,
-  cacheCreatePerMillion: 6.50,
-};

@@ -56,7 +56,7 @@ export class ConfigService {
   }
 
   get defaultModelName(): string {
-    return this.cfg.get<string>('defaultModelName', 'Kimi-2.6');
+    return this.cfg.get<string>('defaultModelName', 'claude-sonnet-4-1-20250514');
   }
 
   get effectiveLanguage(): 'en' | 'zh-CN' {
@@ -131,7 +131,7 @@ export class ConfigService {
   }
 
   get pricingOfficialUrl(): string {
-    return this.cfg.get<string>('pricing.officialUrl', 'https://platform.kimi.com/docs/pricing/chat-k26');
+    return this.cfg.get<string>('pricing.officialUrl', 'https://www.anthropic.com/pricing');
   }
 
   get pricingOfficialDate(): string {
@@ -141,11 +141,20 @@ export class ConfigService {
   getPricing(modelName: string): TokenPricing {
     const key = modelName.toLowerCase().replace(/[^a-z0-9]/g, '');
     const prefix = `pricing.models.${key}`;
+    const lower = modelName.toLowerCase();
+    let defaults: TokenPricing;
+    if (lower.includes('opus')) {
+      defaults = { inputPerMillion: 5.00, outputPerMillion: 25.00, cacheReadPerMillion: 0.50, cacheCreatePerMillion: 6.25 };
+    } else if (lower.includes('haiku')) {
+      defaults = { inputPerMillion: 1.00, outputPerMillion: 5.00, cacheReadPerMillion: 0.10, cacheCreatePerMillion: 1.25 };
+    } else {
+      defaults = { inputPerMillion: 3.00, outputPerMillion: 15.00, cacheReadPerMillion: 0.30, cacheCreatePerMillion: 3.75 };
+    }
     return {
-      inputPerMillion: this.cfg.get<number>(`${prefix}.inputPerMillion`, 6.50),
-      outputPerMillion: this.cfg.get<number>(`${prefix}.outputPerMillion`, 27.00),
-      cacheReadPerMillion: this.cfg.get<number>(`${prefix}.cacheReadPerMillion`, 1.10),
-      cacheCreatePerMillion: this.cfg.get<number>(`${prefix}.cacheCreatePerMillion`, 6.50),
+      inputPerMillion: this.cfg.get<number>(`${prefix}.inputPerMillion`, defaults.inputPerMillion),
+      outputPerMillion: this.cfg.get<number>(`${prefix}.outputPerMillion`, defaults.outputPerMillion),
+      cacheReadPerMillion: this.cfg.get<number>(`${prefix}.cacheReadPerMillion`, defaults.cacheReadPerMillion),
+      cacheCreatePerMillion: this.cfg.get<number>(`${prefix}.cacheCreatePerMillion`, defaults.cacheCreatePerMillion),
     };
   }
 }

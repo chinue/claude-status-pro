@@ -2,7 +2,7 @@
   "name": "claude-status-pro",
   "displayName": "ClaudeStatusPro",
   "description": "Monitor Claude Code quota usage in real-time",
-  "version": "0.2.20",
+  "version": "0.1.0",
   "publisher": "kayuii",
   "license": "MIT",
   "repository": {
@@ -200,33 +200,89 @@
           "order": 66,
           "description": "Height ratio for dashboard charts (canvas height = width * ratio)."
         },
-        "claudeStatusPro.pricing.models.kimi26.inputPerMillion": {
+        "claudeStatusPro.pricing.models.opus.inputPerMillion": {
           "type": "number",
-          "default": 6.5,
+          "default": 5.0,
           "minimum": 0,
           "order": 80,
-          "description": "Kimi-2.6 input token price per million (RMB)."
+          "description": "Claude Opus input token price per million (USD)."
         },
-        "claudeStatusPro.pricing.models.kimi26.outputPerMillion": {
+        "claudeStatusPro.pricing.models.opus.outputPerMillion": {
           "type": "number",
-          "default": 27,
+          "default": 25.0,
           "minimum": 0,
           "order": 81,
-          "description": "Kimi-2.6 output token price per million (RMB)."
+          "description": "Claude Opus output token price per million (USD)."
         },
-        "claudeStatusPro.pricing.models.kimi26.cacheReadPerMillion": {
+        "claudeStatusPro.pricing.models.opus.cacheReadPerMillion": {
           "type": "number",
-          "default": 1.1,
+          "default": 0.5,
           "minimum": 0,
           "order": 82,
-          "description": "Kimi-2.6 cache-read token price per million (RMB)."
+          "description": "Claude Opus cache-read token price per million (USD)."
         },
-        "claudeStatusPro.pricing.models.kimi26.cacheCreatePerMillion": {
+        "claudeStatusPro.pricing.models.opus.cacheCreatePerMillion": {
           "type": "number",
-          "default": 6.5,
+          "default": 6.25,
           "minimum": 0,
           "order": 83,
-          "description": "Kimi-2.6 cache-write token price per million (RMB)."
+          "description": "Claude Opus cache-write token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.sonnet.inputPerMillion": {
+          "type": "number",
+          "default": 3.0,
+          "minimum": 0,
+          "order": 84,
+          "description": "Claude Sonnet input token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.sonnet.outputPerMillion": {
+          "type": "number",
+          "default": 15.0,
+          "minimum": 0,
+          "order": 85,
+          "description": "Claude Sonnet output token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.sonnet.cacheReadPerMillion": {
+          "type": "number",
+          "default": 0.3,
+          "minimum": 0,
+          "order": 86,
+          "description": "Claude Sonnet cache-read token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.sonnet.cacheCreatePerMillion": {
+          "type": "number",
+          "default": 3.75,
+          "minimum": 0,
+          "order": 87,
+          "description": "Claude Sonnet cache-write token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.haiku.inputPerMillion": {
+          "type": "number",
+          "default": 1.0,
+          "minimum": 0,
+          "order": 88,
+          "description": "Claude Haiku input token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.haiku.outputPerMillion": {
+          "type": "number",
+          "default": 5.0,
+          "minimum": 0,
+          "order": 89,
+          "description": "Claude Haiku output token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.haiku.cacheReadPerMillion": {
+          "type": "number",
+          "default": 0.1,
+          "minimum": 0,
+          "order": 90,
+          "description": "Claude Haiku cache-read token price per million (USD)."
+        },
+        "claudeStatusPro.pricing.models.haiku.cacheCreatePerMillion": {
+          "type": "number",
+          "default": 1.25,
+          "minimum": 0,
+          "order": 91,
+          "description": "Claude Haiku cache-write token price per million (USD)."
         },
         "claudeStatusPro.pricing.officialUrl": {
           "type": "string",
@@ -242,7 +298,7 @@
         },
         "claudeStatusPro.defaultModelName": {
           "type": "string",
-          "default": "Kimi-2.6",
+          "default": "claude-sonnet-4-1-20250514",
           "order": 70,
           "description": "Default model name displayed when usage entry has no model information."
         },

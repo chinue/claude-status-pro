@@ -8,7 +8,7 @@ import { makeT } from '../i18n';
 import { formatPercent, fmtRmb, fmtNumber } from '../calc';
 import { HistoryService } from '../services/historyService';
 import {
-  AppState, UsageEntry, DashboardMessage, KimiUsageData, DashboardAggregates,
+  AppState, UsageEntry, DashboardMessage, ClaudeUsageData, DashboardAggregates,
   HeatmapData, CostCurveOptions, TokenPricing,
 } from '../types';
 
@@ -170,7 +170,7 @@ export class DashboardPanel {
       console.error('Dashboard aggregation error', err);
     }
 
-    const usage = this.buildKimiUsageData(state);
+    const usage = this.buildClaudeUsageData(state);
 
     return {
       usage,
@@ -192,7 +192,7 @@ export class DashboardPanel {
     };
   }
 
-  private buildKimiUsageData(state: AppState): KimiUsageData {
+  private buildClaudeUsageData(state: AppState): ClaudeUsageData {
     const le = state.localEstimate;
     const quota = state.quota;
     const now = Date.now();
@@ -205,7 +205,7 @@ export class DashboardPanel {
       resetIn7d: quota ? Math.max(0, Math.floor((quota.weeklyResetAt - now) / 1000)) : 0,
       limitStatus: 'allowed',
       has7dLimit: !!quota,
-      providerType: 'kimi-ai',
+      providerType: 'claude-ai',
       cost5h: le?.cost5h ?? 0,
       costDay: le?.costToday ?? 0,
       cost7d: le?.cost7d ?? 0,
@@ -630,7 +630,7 @@ export class DashboardPanel {
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     function fmtNum(n) { return (isFinite(n) ? Math.round(n) : 0).toLocaleString('en-US'); }
-    function fmtRmb(n) { return '¥' + (isFinite(n) ? n.toFixed(2) : '0.00'); }
+    function fmtUsd(n) { return '$' + (isFinite(n) ? n.toFixed(2) : '0.00'); }
     function fmtDateShort(iso) { const d = new Date(iso); return (d.getMonth()+1) + '.' + d.getDate(); }
     function heatmapColdWarmColor(t) {
       t = Math.max(0, Math.min(1, t));
@@ -828,7 +828,7 @@ export class DashboardPanel {
     function renderPricingContent(pricing, settings, modelPricing) {
       const el = document.getElementById('pricing-content');
       if (!el || !pricing) return;
-      const providerLabel = settings.provider === 'kimi-ai' ? 'Kimi.ai' : settings.provider;
+      const providerLabel = settings.provider === 'claude-ai' ? 'Anthropic' : settings.provider;
       const apiStatus = settings.apiEnabled
         ? '<span class="settings-badge ok">' + '${i18n('dashboard.apiEnabled')}' + '</span>'
         : '<span class="settings-badge warn">' + '${i18n('dashboard.apiDisabled')}' + '</span>';
@@ -1207,7 +1207,7 @@ export class DashboardPanel {
                 },
                 scales: {
                   x: { ticks: xTicks, grid: { display: false } },
-                  y: { ticks: { color: fg, font: { size: 10 }, callback: v => '¥' + Number(v).toFixed(2) }, beginAtZero: true },
+                  y: { ticks: { color: fg, font: { size: 10 }, callback: v => '$' + Number(v).toFixed(2) }, beginAtZero: true },
                 },
               },
             });
@@ -1441,7 +1441,7 @@ export class DashboardPanel {
               footerFont: { family: tooltipMono, size: 11 },
               callbacks: {
                 title: items => { if (!items || !items.length) return ''; const x = items[0].parsed && typeof items[0].parsed.x === 'number' ? items[0].parsed.x : NaN; return isFinite(x) ? fmtTick(x) : ''; },
-                label: ctx => '¥' + Number(ctx.parsed.y || 0).toFixed(4),
+                label: ctx => '$' + Number(ctx.parsed.y || 0).toFixed(4),
               },
             },
           },
@@ -1451,7 +1451,7 @@ export class DashboardPanel {
               ticks: { color: fg, font: { size: 8 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8, callback: v => fmtTick(Number(v)) },
               grid: { display: false },
             },
-            y: { ticks: { color: fg, font: { size: 10 }, callback: v => '¥' + v }, grid: { color: fg + '22' }, beginAtZero: true },
+            y: { ticks: { color: fg, font: { size: 10 }, callback: v => '$' + v }, grid: { color: fg + '22' }, beginAtZero: true },
           },
         },
       });

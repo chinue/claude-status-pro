@@ -100,10 +100,10 @@ export function fmtTokens(n: number): string {
   return String(n);
 }
 
-/** Format a cost in RMB with 2 decimals. */
-export function fmtCost(rmb: number): string {
-  const safe = isFinite(rmb) ? rmb : 0;
-  return '¥' + safe.toFixed(2);
+/** Format a cost in USD with 2 decimals. */
+export function fmtCost(usd: number): string {
+  const safe = isFinite(usd) ? usd : 0;
+  return '$' + safe.toFixed(2);
 }
 
 // DESIGN: v2-local-estimation-design.md
@@ -395,11 +395,14 @@ export function formatMonthLocal(ms: number): string {
   return `${y}-${m}`;
 }
 
-/** Format currency with ¥ prefix and 2 decimals. */
-export function fmtRmb(n: number): string {
+/** Format currency with $ prefix and 2 decimals. */
+export function fmtUsd(n: number): string {
   const safe = isFinite(n) ? n : 0;
-  return '¥' + safe.toFixed(2);
+  return '$' + safe.toFixed(2);
 }
+
+/** @deprecated Use fmtUsd instead. */
+export const fmtRmb = fmtUsd;
 
 /** Format large numbers with commas. */
 export function fmtNumber(n: number): string {

@@ -124,7 +124,7 @@ export function deactivate(): void {
 async function promptForApiKey(context: vscode.ExtensionContext): Promise<void> {
   const value = await vscode.window.showInputBox({
     title: 'ClaudeStatusPro – Set API Key',
-    prompt: 'Paste your Kimi API key (sk-...).',
+    prompt: 'Paste your Anthropic API key (sk-ant-...).',
     password: true,
     ignoreFocusOut: true,
     placeHolder: 'sk-...',

@@ -97,7 +97,7 @@ export interface CachedData {
   calibration?: CalibrationData;
 }
 
-export interface KimiOAuthCredentials {
+export interface ClaudeOAuthCredentials {
   accessToken: string;
   refreshToken: string;
   tokenType: string;
@@ -136,7 +136,7 @@ export interface UsageEntry {
 }
 
 export interface DashboardMessage {
-  usage: KimiUsageData;
+  usage: ClaudeUsageData;
   dashboard: DashboardAggregates | null;
   heatmap: HeatmapData | null;
   costCurveOptions: CostCurveOptions | null;
@@ -146,7 +146,7 @@ export interface DashboardMessage {
   isLoading: boolean;
 }
 
-export interface KimiUsageData {
+export interface ClaudeUsageData {
   // API data
   utilization5h: number;
   utilization7d: number;
@@ -154,7 +154,7 @@ export interface KimiUsageData {
   resetIn7d: number;
   limitStatus: 'allowed' | 'allowed_warning' | 'denied';
   has7dLimit: boolean;
-  providerType: 'kimi-ai' | 'api-key';
+  providerType: 'claude-ai' | 'aws-bedrock' | 'api-key' | 'unknown';
 
   // Local JSONL aggregate
   cost5h: number;
@@ -239,7 +239,7 @@ export interface HeatmapData {
 
 export interface DailyUsage {
   date: string;      // YYYY-MM-DD local time
-  cost: number;      // RMB
+  cost: number;      // USD
   sessionCount: number;
   tokensTotal: number;
 }

@@ -15,84 +15,50 @@ describe('ApiService', () => {
     (ApiService as any).instance = undefined;
   });
 
-  it('parses real Kimi API shape correctly', async () => {
-    sinon.stub(nodeFetch, 'default').resolves({
-      ok: true, status: 200,
-      json: async () => ({
-        usage: {
-          limit: '10000',
-          used: '2500',
-          remaining: '7500',
-          resetTime: new Date(Date.now() + 86400000).toISOString(),
-        },
-        limits: [
-          {
-            detail: {
-              limit: '2000',
-              used: '500',
-              remaining: '1500',
-              resetTime: new Date(Date.now() + 18000000).toISOString(),
-            },
-          },
-        ],
-        parallel: { limit: '30' },
-      }),
-    } as any);
+  it('parses Claude rate limit headers correctly', async () => {
+    const reset7d = '1715568000';
+    const reset5h = '1715582400';
+    const resp = new nodeFetch.Response(JSON.stringify({ content: [{ text: '' }] }), {
+      status: 200,
+      headers: {
+        'anthropic-ratelimit-unified-7d-utilization': '0.25',
+        'anthropic-ratelimit-unified-5h-utilization': '0.50',
+        'anthropic-ratelimit-unified-7d-reset': reset7d,
+        'anthropic-ratelimit-unified-5h-reset': reset5h,
+      },
+    });
+    sinon.stub(nodeFetch, 'default').resolves(resp);
 
     const result = await api.fetchQuota('sk-test');
     expect(result.ok).to.be.true;
     expect(result.data).to.not.be.undefined;
-    expect(result.data!.weeklyLimit).to.equal(10000);
-    expect(result.data!.weeklyUsed).to.equal(2500);
-    expect(result.data!.weeklyUsedPct).to.equal(25); // 2500/10000*100
-    expect(result.data!.windowLimit).to.equal(2000);
-    expect(result.data!.windowUsed).to.equal(500);
-    expect(result.data!.windowUsedPct).to.equal(25); // 500/2000*100
-    expect(result.data!.windowRemaining).to.equal(1500);
-    expect(result.data!.parallelLimit).to.equal(30);
-
-    // Verify User-Agent header
-    const stub = nodeFetch.default as unknown as sinon.SinonStub;
-    const callArgs = stub.getCall(0).args[1];
-    expect(callArgs.headers['User-Agent']).to.equal('KimiCLI/1.6');
+    expect(result.data!.weeklyUsedPct).to.equal(25);
+    expect(result.data!.windowUsedPct).to.equal(50);
+    expect(result.data!.weeklyResetAt).to.equal(parseFloat(reset7d) * 1000);
+    expect(result.data!.windowResetAt).to.equal(parseFloat(reset5h) * 1000);
+    expect(result.data!.weeklyLimit).to.equal(0);
+    expect(result.data!.windowLimit).to.equal(0);
+    expect(result.data!.parallelLimit).to.equal(0);
   });
 
-  it('uses API-provided used_pct when present', async () => {
-    sinon.stub(nodeFetch, 'default').resolves({
-      ok: true, status: 200,
-      json: async () => ({
-        usage: {
-          limit: '1000',
-          used: '300',
-          used_pct: 33.3,
-        },
-        limits: [
-          {
-            detail: {
-              limit: '200',
-              used: '50',
-              used_pct: 25.5,
-            },
-          },
-        ],
-      }),
-    } as any);
+  it('handles 403 quota exhausted', async () => {
+    const resp = new nodeFetch.Response('', { status: 403 });
+    sinon.stub(nodeFetch, 'default').resolves(resp);
 
     const result = await api.fetchQuota('sk-test');
-    expect(result.ok).to.be.true;
-    expect(result.data!.weeklyUsedPct).to.equal(33.3);
-    expect(result.data!.windowUsedPct).to.equal(25.5);
+    expect(result.ok).to.be.false;
+    expect(result.authFailed).to.be.true;
+    expect(result.error).to.equal('Rate limit quota exhausted');
   });
 
   it('returns authFailed on 401', async () => {
-    sinon.stub(nodeFetch, 'default').resolves({
-      ok: false, status: 401,
-      json: async () => ({}),
-    } as any);
+    const resp = new nodeFetch.Response('', { status: 401 });
+    sinon.stub(nodeFetch, 'default').resolves(resp);
 
     const result = await api.fetchQuota('bad-token');
     expect(result.ok).to.be.false;
     expect(result.authFailed).to.be.true;
+    expect(result.error).to.equal('HTTP 401');
   });
 
   it('returns networkError on timeout', async () => {
